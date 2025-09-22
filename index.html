@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Georgel | Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <h1>Georgel</h1>
+    <p>Frontend Developer | UI/UX Enthusiast</p>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>About Me 🧑‍💻</h2>
+      <p>
+        Hello! I'm a passionate developer with a love for creating clean, intuitive, and dynamic user experiences. I specialize in front-end technologies and enjoy turning complex problems into beautiful, simple designs. When I'm not coding, you'll find me exploring new tech or contributing to open-source projects.
+      </p>
+    </section>
+<br>
+    <section id="projects">
+      <h2>My Projects 🚀</h2>
+      <div id="project-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="web">Web Apps</button>
+        <button class="filter-btn" data-filter="mobile">Mobile</button>
+        <button class="filter-btn" data-filter="design">UI/UX Design</button>
+      </div>
+      <div id="project-grid">
+    <div class="project-card" data-category="web">
+      <img src="other/img1.jpg" alt="Project 1">
+      <div class="project-info">
+        <p>Projects that helped me to learn and interact with HTML and CSS.(Not fully finished)</p>
+        
+        <div class="project-columns">
+          <div class="column">
+            <h3>TechShop</h3>
+            <a href="https://georgel0.github.io/TechShop/" class="project-link">View Project &rarr;</a>
+            <h3>SkateShop</h3>
+            <a href="https://georgel0.github.io/SkateShop/" class="project-link">View Project &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card" data-category="mobile">
+      <img src="other/logo.png" alt="Project 2">
+      <div class="project-info">
+        <h3>The Digital Junk Drawer</h3>
+        <p>A website built for having a little fun on the internet.</p>
+        <a href="https://georgel0.github.io/The-Digital-Junk-Drawer-/" class="project-link">View Project &rarr;</a>
+      </div>
+    </div>
+
+    <div class="project-card" data-category="design">
+      <img src="other/img2.jpg" alt="Project 3">
+      <div class="project-info">
+        <h3>Sales Performance Overview</h3>
+        <p>A project that shows my UI/UX Design potential.</p>
+        <a href="other/UXDesign.html" class="project-link">View Project &rarr;</a>
+      </div>
+    </div>
+
+    <div class="project-card" data-category="web">
+      <img src="other/img3.jpg" alt="Project 4">
+      <div class="project-info">
+        <h3>Portfolio Website</h3>
+        <p>A first, concept personal portfolio built with modern CSS and JavaScript.(nothing special just exploring a bit)</p>
+        <a href="other/portofolioConcept.html" class="project-link">View Project &rarr;</a>
+      </div>
+    </div>
+</div>
+
+    </section>
+
+    <br><br>
+
+    <section id="contact">
+      <button id="reach-out-btn">Reach Out 👋</button>
+      <div id="contact-form-container">
+        <h2>Let's Get in Touch!</h2>
+        <form action="https://formspree.io/f/xqalokdd" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Your Email" required>
+          <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Get in touch:</p>
+    <div class="social-links">
+      <a href="mailto:georgelgarabajiu07@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      <a href="https://github.com/Georgel0" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/georgel-garabajiu-297a052a8" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <p>&copy; 2025 Georgel Garabajiu. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+  // --- Project Filtering ---
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  // Show all projects initially
+  projectCards.forEach(card => card.classList.add('show'));
+
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const filter = button.getAttribute('data-filter');
+
+      projectCards.forEach(card => {
+        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+          card.classList.add('show');
+        } else {
+          card.classList.remove('show');
+        }
+      });
+    });
+  });
+
+  // --- Reach Out Section Animation ---
+  const reachOutBtn = document.getElementById('reach-out-btn');
+  const contactFormContainer = document.getElementById('contact-form-container');
+
+  reachOutBtn.addEventListener('click', () => {
+    contactFormContainer.classList.toggle('visible');
+
+    // Smooth fade text change
+    reachOutBtn.classList.add('fade-out');
+
+    setTimeout(() => {
+      if (contactFormContainer.classList.contains('visible')) {
+        reachOutBtn.textContent = 'Close';
+      } else {
+        reachOutBtn.textContent = 'Reach Out 👋';
+      }
+      reachOutBtn.classList.remove('fade-out');
+    }, 300); // matches CSS transition time
+  });
+});
+  </script>
+</body>
+</html>
