@@ -54,7 +54,6 @@ h2 {
   padding-bottom: 0.5rem;
 }
 
-/* Projects Section */
 #project-filters {
   display: flex;
   justify-content: center;
@@ -77,7 +76,6 @@ h2 {
   color: #fff;
 }
 
-/* Projects Section */
 #project-filters {
   display: flex;
   justify-content: center;
@@ -140,7 +138,6 @@ display: none;
   margin-bottom: 1rem;
 }
 
-/* This is a GENERAL style for all card links */
 .project-card .project-link {
   display: flex;
   align-content: left;
@@ -150,35 +147,10 @@ display: none;
   font-weight: 600;
 }
 
-/*STYLES FOR THE SPECIAL TWO-COLUMN CARD ONLY */
 .project-columns {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-top: 1rem; 
-  margin-right: 70px;
-}
-
-.project-columns .column {
-  flex: 1;
-}
-
-.project-columns .column h3 {
-  display: flex;
-  
-}
-
-.project-columns .column:not(:first-child) {
-    margin-top: 0;
-}
-
-.project-columns .align-right {
-  text-align: right;
-}
-
-
-.project-columns .column h3 + h3 {
-  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
 }
 
 /* Reach Out Section */
