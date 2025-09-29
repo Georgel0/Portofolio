@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Georgel | Portfolio</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="favicon.png"> 
 </head>
-<body>
+<body class="loading">
 
   <header>
     <h1>Georgel</h1>
@@ -23,35 +26,34 @@
       </p>
     </section>
 <br>
-<section id="technologies">
-  <h2>My Tech Stack</h2>
-  <div id="tech-grid">
-    <div class="tech-item"><i class="fab fa-html5"></i><span>HTML</span></div>
-    <div class="tech-item"><i class="fab fa-css3-alt"></i><span>CSS</span></div>
-    <div class="tech-item"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
-    
-    <div class="tech-item"><i class="fab fa-sass"></i><span>SASS</span></div>
-    <div class="tech-item"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></div>
-    <div class="tech-item"><i class="fas fa-code"></i><span>JQuery</span></div> 
-    
-    <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
-    <div class="tech-item"><i class="fas fa-wind"></i><span>Tailwind CSS</span></div> 
-    <div class="tech-item"><i class="fas fa-dharmachakra"></i><span>Redux</span></div>
-  </div>
-</section>
+    <section id="technologies">
+      <h2>My Tech Stack</h2>
+      <div id="tech-grid">
+        <div class="tech-item"><i class="fab fa-html5"></i><span>HTML</span></div>
+        <div class="tech-item"><i class="fab fa-css3-alt"></i><span>CSS</span></div>
+        <div class="tech-item"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
+        
+        <div class="tech-item"><i class="fab fa-sass"></i><span>SASS</span></div>
+        <div class="tech-item"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></div>
+        <div class="tech-item"><i class="fas fa-code"></i><span>JQuery</span></div>
+        
+        <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
+        <div class="tech-item"><i class="fas fa-wind"></i><span>Tailwind CSS</span></div>
+        <div class="tech-item"><i class="fas fa-dharmachakra"></i><span>Redux</span></div>
+      </div>
+    </section>
 <br>
-
     <section id="projects">
       <h2>My Projects</h2>
-      <div id="project-filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="web">Web Apps</button>
-        <button class="filter-btn" data-filter="mobile">Mobile</button>
-        <button class="filter-btn" data-filter="design">UI/UX Design</button>
+      <div id="project-filters" role="tablist">
+        <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-btn" data-filter="web" role="tab" aria-selected="false">Web Apps</button>
+        <button class="filter-btn" data-filter="mobile" role="tab" aria-selected="false">Mobile</button>
+        <button class="filter-btn" data-filter="design" role="tab" aria-selected="false">UI/UX Design</button>
       </div>
       <div id="project-grid">
     <div class="project-card" data-category="web">
-      <img src="other/img1.jpg" alt="Project 1">
+      <img src="other/img1.jpg" alt="TechShop E-commerce Website Landing Page">
       <div class="project-info">
         <p>Projects that helped me to learn and interact with HTML and CSS (Not fully finished).</p>
         
@@ -65,7 +67,7 @@
     </div>
 
     <div class="project-card" data-category="mobile">
-      <img src="other/logo.png" alt="Project 2">
+      <img src="other/logo.png" alt="Digital Junk Drawer Website Logo">
       <div class="project-info">
         <h3>The Digital Junk Drawer</h3>
         <p>A website built for having a little fun on the internet.</p>
@@ -74,7 +76,7 @@
     </div>
 
     <div class="project-card" data-category="design">
-      <img src="other/img2.jpg" alt="Project 3">
+      <img src="other/img2.jpg" alt="Sales Performance Overview UI/UX Design Mockup">
       <div class="project-info">
         <h3>Sales Performance Overview</h3>
         <p>A project that shows my UI/UX Design potential.</p>
@@ -83,7 +85,7 @@
     </div>
 
     <div class="project-card" data-category="web">
-      <img src="other/img3.jpg" alt="Project 4">
+      <img src="other/img3.jpg" alt="First Concept Portfolio Website Screenshot">
       <div class="project-info">
         <h3>Portfolio Website</h3>
         <p>A first, concept personal portfolio built with modern CSS and JavaScript.(nothing special just exploring a bit)</p>
@@ -122,50 +124,55 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-  // --- Project Filtering ---
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card');
+      setTimeout(() => {
+        document.body.classList.remove('loading');
+      }, 100); 
+      
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const projectCards = document.querySelectorAll('.project-card');
 
-  // Show all projects initially
-  projectCards.forEach(card => card.classList.add('show'));
+      projectCards.forEach(card => card.classList.add('show'));
 
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          filterButtons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+          });
+          
+          button.classList.add('active');
+          button.setAttribute('aria-selected', 'true');
 
-      const filter = button.getAttribute('data-filter');
+          const filter = button.getAttribute('data-filter');
 
-      projectCards.forEach(card => {
-        if (filter === 'all' || card.getAttribute('data-category') === filter) {
-          card.classList.add('show');
-        } else {
-          card.classList.remove('show');
-        }
+          projectCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.classList.add('show');
+            } else {
+              card.classList.remove('show');
+            }
+          });
+        });
+      });
+
+      const reachOutBtn = document.getElementById('reach-out-btn');
+      const contactFormContainer = document.getElementById('contact-form-container');
+
+      reachOutBtn.addEventListener('click', () => {
+        contactFormContainer.classList.toggle('visible');
+
+        reachOutBtn.classList.add('fade-out');
+
+        setTimeout(() => {
+          if (contactFormContainer.classList.contains('visible')) {
+            reachOutBtn.textContent = 'Close';
+          } else {
+            reachOutBtn.textContent = 'Reach Out';
+          }
+          reachOutBtn.classList.remove('fade-out');
+        }, 300);
       });
     });
-  });
-
-  // --- Reach Out Section Animation ---
-  const reachOutBtn = document.getElementById('reach-out-btn');
-  const contactFormContainer = document.getElementById('contact-form-container');
-
-  reachOutBtn.addEventListener('click', () => {
-    contactFormContainer.classList.toggle('visible');
-
-    // Smooth fade text change
-    reachOutBtn.classList.add('fade-out');
-
-    setTimeout(() => {
-      if (contactFormContainer.classList.contains('visible')) {
-        reachOutBtn.textContent = 'Close';
-      } else {
-        reachOutBtn.textContent = 'Reach Out';
-      }
-      reachOutBtn.classList.remove('fade-out');
-    }, 300); // matches CSS transition time
-  });
-});
   </script>
 </body>
 </html>
