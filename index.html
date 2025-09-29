@@ -21,9 +21,13 @@
     <section id="about">
       <h2>About Me</h2>
       <p>
-      Hello! My name is Georgel i'am 18 and i'am a Junior Web Developer.
-      I like to build website, learn new thing and constantly imrpove my skills.
+      Hello! My name is Georgel, I'm 18, and I'm a Junior Web Developer.
+I like to build websites, learn new things, and constantly improve my skills.
       </p>
+    </section>
+<br>
+    <section id="education">
+
     </section>
 <br>
     <section id="technologies">
@@ -40,11 +44,19 @@
         <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
         <div class="tech-item"><i class="fas fa-wind"></i><span>Tailwind CSS</span></div>
         <div class="tech-item"><i class="fas fa-dharmachakra"></i><span>Redux</span></div>
+        
+        <div class="tech-item"><i class="fab fa-git-alt"></i><span>Git</span></div>
+        <div class="tech-item"><i class="fab fa-github"></i><span>GitHub</span></div>
+      </div>
+      
+      <div id="tech-see-more-container"><button id="tech-see-more-btn">See More &darr;</button>
       </div>
     </section>
 <br>
     <section id="projects">
       <h2>My Projects</h2>
+      <p>I built these to imporve amd test my coding skills.</p>
+      <br>
       <div id="project-filters" role="tablist">
         <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
         <button class="filter-btn" data-filter="web" role="tab" aria-selected="false">Web Apps</button>
@@ -118,6 +130,7 @@
       <a href="mailto:georgelgarabajiu07@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
       <a href="https://github.com/Georgel0" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
       <a href="https://www.linkedin.com/in/georgel-garabajiu-297a052a8" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="other/CV.html"><i class="fas fa-file-lines"></i></a>
     </div>
     <p>&copy; 2025 Georgel Garabajiu. All Rights Reserved.</p>
   </footer>
@@ -173,6 +186,22 @@
         }, 300);
       });
     });
+    
+    // Tech Stack Expansion
+    
+    const seeMoreBtn = document.getElementById('tech-see-more-btn');
+    const techGrid = document.getElementById('tech-grid');
+    
+    seeMoreBtn.addEventListener('click', () => {
+      techGrid.classList.toggle('expanded');
+      
+      if (techGrid.classList.contains('expanded')) {
+        seeMoreBtn.innerHTML = 'Show Less &uarr;'; 
+        
+      } else {
+        seeMoreBtn.innerHTML = 'See More &darr;';
+        }
+      });
   </script>
 </body>
 </html>
