@@ -310,6 +310,12 @@ footer {
   color: var(--accent-color);
 }
 
+@media (min-width: 1600px) {
+  header, main, footer {
+    max-width: 1400px;
+  }
+}
+
 @media (min-width: 1200px) {
   #project-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
