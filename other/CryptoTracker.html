@@ -5,289 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Crypto Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+    'background-dark': '#12121e', /* Changed from 'background-color' for consistency */
+    'card-dark': '#1a1a2e',
+    'control-dark': '#2c2c47',
+    'primary-green': '#4CAF50',
+    'accent-green': '#00ff84',
+    'price-up': '#00ff84',
+    'price-down': '#ff5757',
+    'border-dark': '#333',
+                    },
+                    boxShadow: {
+    'header': '0 6px 12px rgba(0, 0, 0, 0.4)',
+    'global': '0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(76, 175, 80, 0.1)',
+    'table': '0 0 20px rgba(0, 0, 0, 0.5)',
+                    },
+                    keyframes: {
+    'flash-green': {
+    '0%': { backgroundColor: '#00ff8440' }, '100%': { backgroundColor: 'transparent' },
+                        },
+    'flash-red': { '0%': { backgroundColor: '#ff575740' },
+    '100%': { backgroundColor: 'transparent' },},
+                    },
+                    animation: {
+    'flash-green': 'flash-green 1s ease-out',
+    'flash-red': 'flash-red 1s ease-out',
+                    },
+                }
+            }
+        }
+    </script>
     <style>
-        /* --- Base and Typography --- */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #12121e;
-    color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
+        .flash-green { animation: flash-green 1s ease-out; }
+        .flash-red { animation: flash-red 1s ease-out; }
+        
+        /* --- Styles to Restore Original Table Appearance --- */
+        .crypto-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a2e; /* card-dark */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Important for rounding corners */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* table shadow */
+        }
+        
+        .crypto-table th {
+            padding: 16px; /* p-4 equivalent */
+            background-color: #2c2c47; /* control-dark */
+            color: #4CAF50; /* primary-green */
+            text-align: right;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.875rem; /* text-sm */
+        }
+        
+        /* Overriding th alignment for Rank and Coin */
+        .crypto-table th:nth-child(1), .crypto-table th:nth-child(2) {
+            text-align: left;
+        }
 
-header {
-    text-align: center;
-    padding: 30px 0 20px 0; 
-    background-color: #1a1a2e;
-    
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); 
-    border-bottom: 2px solid #4CAF50; 
-}
+        .crypto-table td {
+            padding: 16px; /* p-4 equivalent */
+            border-bottom: 1px solid #333; /* border-dark */
+            text-align: right; /* Default for price/volume/change columns */
+        }
+        
+        /* Remove border from the last row */
+        .crypto-table tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-h1 {
-    margin: 0 0 5px 0; 
-    font-size: 2.5em; 
-    color: #4CAF50; 
-    letter-spacing: 1.5px; 
-    text-shadow: 0 0 5px rgba(76, 175, 80, 0.5); 
-}
+        .crypto-table tbody tr:hover {
+            background-color: rgba(44, 44, 71, 0.3); /* Custom hover color */
+        }
 
-header p {
-    font-size: 0.9em;
-    color: #999;
-    margin: 0;
-}
+        /* Specific styles for the Coin column */
+        .crypto-table td:nth-child(2) {
+            text-align: left;
+        }
 
-main {
-    width: 95%;
-    max-width: 1400px;
-    margin: 20px auto;
-}
+        .coin-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: normal;
+        }
+        
+        .coin-logo {
+            width: 24px; /* Fix logo size */
+            height: 24px;
+        }
+        
+        .price-up { color: #00ff84; } 
+        .price-down { color: #ff5757; }
+        /* --- End of Restored Table Styles --- */
+        
+        /* Column Widths (as before) */
+        .crypto-table th:nth-child(1), .crypto-table td:nth-child(1) { text-align: center; width: 5%; }
+        .crypto-table th:nth-child(2), .crypto-table td:nth-child(2) { text-align: left; width: 18%; }
+        .crypto-table th:nth-child(7), .crypto-table td:nth-child(7) { width: 10%; }
 
-#global-stats {
-    width: 90%;
-    max-width: 1200px;
-    margin: 30px auto; 
-    display: flex;
-    justify-content: space-around;
-    gap: 15px;
-    padding: 20px 15px;
-    background-color: #1a1a2e;
-    border-radius: 12px; 
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(76, 175, 80, 0.1); 
-    border: 1px solid #333; 
-}
+        /* Responsive hiding (as before) */
+        @media (max-width: 1024px) {
+            .crypto-table th:nth-child(4), .crypto-table td:nth-child(4) { display: none; }
+        }
+        @media (max-width: 768px) {
+            .crypto-table th:nth-child(6), .crypto-table td:nth-child(6) { display: none; }
+        }
+        @media (max-width: 500px) {
+            .crypto-table th:nth-child(7), .crypto-table td:nth-child(7) { display: none; }
+        }
 
-.stat-card {
-    text-align: center;
-    padding: 5px 10px;
-    flex: 1;
-    border-right: 1px solid #333;
-}
+        .active-filter {
+            background-color: #4CAF50 !important;
+            color: #1a1a2e !important;
+            border: 2px solid #00ff84 !important;
+        }
 
-.stat-card:last-child {
-    border-right: none;
-}
-
-.stat-card h3 {
-    margin: 0 0 5px 0;
-    font-size: 1.5em;
-    color: #4CAF50; 
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-card p {
-    font-size: 2em; 
-    font-weight: bold;
-    color: #f0f0f0;
-}
-
-#controls {
-    width: 90%;
-    max-width: 1200px;
-    margin: 10px auto;
-    padding: 15px;
-    background-color: #1a1a2e; 
-    border-radius: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-#search-input {
-    padding: 10px;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-    background-color: #1a1a1e;
-    color: #f0f0f0;
-    flex-grow: 1;
-    max-width: 300px;
-}
-
-#filter-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-#filter-buttons button, 
-#sort-controls select,
-#sort-controls label {
-    padding: 8px 15px;
-    border-radius: 5px;
-    border: none;
-    background-color: #2c2c47; 
-    color: #f0f0f0;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s;
-}
-#filter-buttons button:hover {
-    background-color: #3f3f61;
-}
-
-
-/* Style for the active/selected button */
-.active-filter {
-    border: 2px solid #00ff84 !important;
-    background-color: #4CAF50 !important;
-    color: #1a1a2e !important;
-}
-
-#sort-controls {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-/* --- Crypto Table --- */
-.crypto-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #1a1a2e;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    margin-top: 20px;
-}
-
-.crypto-table th, .crypto-table td {
-    padding: 15px;
-    text-align: right;
-    border-bottom: 1px solid #333;
-}
-
-.crypto-table th {
-    background-color: #2c2c47;
-    text-align: left;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.85em;
-    color: #4CAF50;
-}
-
-.crypto-table td:nth-child(1), .crypto-table th:nth-child(1) { text-align: center; width: 5%; }
-.crypto-table td:nth-child(2), .crypto-table th:nth-child(2) { text-align: left; width: 18%; }
-.crypto-table td:nth-child(7), .crypto-table th:nth-child(7) { width: 10%; }
-
-
-.coin-name {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: normal;
-}
-
-.coin-logo {
-    width: 24px;
-    height: 24px;
-}
-
-/* Price change colors */
-.price-up { color: #00ff84; }
-.price-down { color: #ff5757; }
-
-/* --- Price Flash Animation --- */
-@keyframes flash-green {
-  0% { background-color: #00ff8440;}
-  100% { background-color: transparent;}
-}
-
-@keyframes flash-red {
-  0% { background-color: #ff575740;}
-  100% { background-color: transparent;}
-}
-
-.flash-green { animation: flash-green 1s ease-out;}
-.flash-red { animation: flash-red 1s ease-out;}
-
-/* --- Sparkline Chart --- */
-.sparkline-chart {
-  height: 30px;
-  width: 100%;
-}
-
-.sparkline-chart svg {
-  width: 100%;
-  height: 100%;
-}
-
-footer {
-  text-align: center;
-  padding: 10px;
-  color: #888;
-  font-size: 0.8em;
-  margin-top: 20px;
-}
-
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 1024px) {
-  .crypto-table th:nth-child(4), .crypto-table td:nth-child(4) {
-    display: none; } 
-    #global-stats { flex-wrap: wrap;} 
-    .stat-card { flex-basis: 45%; border-right: none;} 
-    .stat-card:nth-child(odd) { border-right: 1px solid #333;}
-}
-
-@media (max-width: 768px) {
-    #controls { flex-direction: column; align-items: stretch; }
-    #search-input, #sort-controls { width: 100%; max-width: none; }
-    #filter-buttons { justify-content: space-between; }
-    #filter-buttons button { flex-grow: 1; }
-    #sort-controls { justify-content: space-between; }
-    .crypto-table th:nth-child(6), .crypto-table td:nth-child(6) { display: none; } 
-}
-
-@media (max-width: 500px) {
-    .crypto-table th:nth-child(7), .crypto-table td:nth-child(7) { display: none; } 
-}
-
+        .sparkline-chart {
+          height: 30px;
+          width: 100%;
+        }
+        .sparkline-chart svg {
+          width: 100%;
+          height: 100%;
+        }
+        
+        /* Style for loading/error messages inside the container */
+        #crypto-container p {
+            padding: 16px;
+            color: #ccc;
+        }
+        .error-message {
+            color: #ff5757;
+        }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Cryptocurrency Live Price Tracker 🪙</h1>
-        <p>Top 25 coins by market capitalization. Data updates automatically every 60s.</p>
+
+<body class="font-sans bg-background-dark text-gray-100 m-0 p-0">
+    <header class="text-center pt-8 pb-5 bg-card-dark shadow-header border-b-2 border-primary-green">
+        <h1 class="m-0 mb-1 text-4xl font-extrabold text-primary-green tracking-wider" style="text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);">Cryptocurrency Live Price Tracker 🪙</h1>
+        <p class="text-sm text-gray-400 m-0">Top 25 coins by market capitalization. Data updates automatically every 60s.</p>
     </header>
     
-    <section id="global-stats">
-        <div class="stat-card">
-            <h3>Total Market Cap:</h3>
-            <p id="total-market-cap">Loading...</p>
+    <section id="global-stats" class="w-11/12 max-w-7xl mx-auto my-8 flex justify-around gap-4 p-5 bg-card-dark rounded-xl shadow-global border border-border-dark flex-wrap">
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto border-r border-border-dark last:border-r-0 odd:md:border-r even:md:border-r-0 even:lg:border-r">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">Total Market Cap:</h3>
+            <p id="total-market-cap" class="text-3xl font-bold text-gray-100">Loading...</p>
         </div>
-        <div class="stat-card">
-            <h3>BTC Dominance:</h3>
-            <p id="btc-dominance">Loading...</p>
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto border-r border-border-dark last:border-r-0 odd:md:border-r even:md:border-r-0 even:lg:border-r">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">BTC Dominance:</h3>
+            <p id="btc-dominance" class="text-3xl font-bold text-gray-100">Loading...</p>
         </div>
-        <div class="stat-card">
-            <h3>24h Total Volume:</h3>
-            <p id="total-volume">Loading...</p>
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto last:border-r-0">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">24h Total Volume:</h3>
+            <p id="total-volume" class="text-3xl font-bold text-gray-100">Loading...</p>
         </div>
     </section>
     
-    <section id="controls">
-        <input type="text" id="search-input" placeholder="Search by coin name or symbol...">
+    <section id="controls" class="w-11/12 max-w-7xl mx-auto my-3 p-4 bg-card-dark rounded-lg flex flex-wrap gap-4 items-center shadow-md sm:flex-col sm:items-stretch md:flex-row">
+        <input type="text" id="search-input" placeholder="Search by coin name or symbol..."
+            class="p-2 border border-primary-green rounded-md bg-[#1a1a1e] text-gray-100 flex-grow max-w-xs md:max-w-none md:w-auto focus:ring-2 focus:ring-primary-green focus:outline-none">
         
-        <div id="filter-buttons">
-            <button id="show-all-btn" data-filter="all" class="active-filter">Show All</button>
-            <button data-filter="high_cap">High Cap ($1B+)</button>
-            <button data-filter="low_price">Low Price (< $1)</button>
+        <div id="filter-buttons" class="flex gap-2 flex-wrap justify-between sm:w-full">
+            <button id="show-all-btn" data-filter="all" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] active-filter flex-grow">Show All</button>
+            <button data-filter="high_cap" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] flex-grow">High Cap ($1B+)</button>
+            <button data-filter="low_price" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] flex-grow">Low Price (< $1)</button>
         </div>
         
-        <div id="sort-controls">
-            <label for="currency-select">Currency:</label>
-            <select id="currency-select">
+        <div id="sort-controls" class="flex gap-4 items-center flex-wrap sm:w-full justify-between">
+            <label for="currency-select" class="text-gray-100">Currency:</label>
+            <select id="currency-select" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer">
                 <option value="usd">USD</option> 
                 <option value="eur">EUR</option>
                 <option value="gbp">GBP</option>
             </select>
             
-            <label for="sort-select">Sort By:</label>
-            <select id="sort-select">
+            <label for="sort-select" class="text-gray-100">Sort By:</label>
+            <select id="sort-select" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer">
                 <option value="market_cap_rank_asc">Rank (Popularity)</option>
                 <option value="current_price_desc">Price (High to Low)</option>
                 <option value="market_cap_desc">Market Cap (High to Low)</option>
@@ -297,18 +197,17 @@ footer {
         </div>
     </section>
     
-    <main>
+    <main class="w-11/12 max-w-7xl mx-auto my-5">
         <div id="crypto-container">
             <p id="loading-message">Loading top 25 cryptocurrency data...</p>
         </div>
     </main>
     
-    <footer>
+    <footer class="text-center p-3 text-gray-500 text-sm mt-5">
         <p>Data powered by CoinGecko API</p>
         <p id="last-updated"></p>
     </footer>
-    
-    <script>
+       <script>
         const CONFIG = {
             BASE_URL: 'https://api.coingecko.com/api/v3/',
             COINS_MARKETS_ENDPOINT: 'coins/markets',
@@ -604,7 +503,7 @@ footer {
 
         function handleCurrencyChange() {
             state.currentCurrency = DOM.currencySelect.value;
-            fetchCryptoData(); 
+            fetchCryptoData();
         }
 
         function init() {
@@ -614,9 +513,7 @@ footer {
             DOM.filterButtons.forEach(button => {
                 button.addEventListener('click', handleFilterClick);
             });
-
             fetchCryptoData();
-
             setInterval(fetchCryptoData, CONFIG.REFRESH_RATE);
         }
 
