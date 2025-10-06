@@ -32,6 +32,8 @@ I like to build websites, learn new things, and constantly improve my skills.
 <br>
     <section id="technologies">
       <h2>My Tech Stack</h2>
+      <div id="tech-carousel-container">
+    <div id="carousel-inner">
       <div id="tech-grid">
         <div class="tech-item"><i class="fab fa-html5"></i><span>HTML</span></div>
         <div class="tech-item"><i class="fab fa-css3-alt"></i><span>CSS</span></div>
@@ -45,10 +47,25 @@ I like to build websites, learn new things, and constantly improve my skills.
         
         <div class="tech-item"><i class="fab fa-git-alt"></i><span>Git</span></div>
         <div class="tech-item"><i class="fab fa-github"></i><span>GitHub</span></div>
-      </div>
       
-      <div id="tech-see-more-container"><button id="tech-see-more-btn">See More &darr;</button>
+  </div>
+  <div id="tech-grid-duplicate">
+        
+        <div class="tech-item"><i class="fab fa-html5"></i><span>HTML</span></div>
+        <div class="tech-item"><i class="fab fa-css3-alt"></i><span>CSS</span></div>
+        <div class="tech-item"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
+        
+        <div class="tech-item"><i class="fab fa-sass"></i><span>SASS</span></div>
+        <div class="tech-item"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></div>
+        
+        <div class="tech-item"><i class="fab fa-react"></i><span>React</span></div>
+        <div class="tech-item"><i class="fas fa-wind"></i><span>Tailwind CSS</span></div>
+        
+        <div class="tech-item"><i class="fab fa-git-alt"></i><span>Git</span></div>
+        <div class="tech-item"><i class="fab fa-github"></i><span>GitHub</span></div>
       </div>
+  </div>
+</div>
     </section>
 <br>
     <section id="projects">
@@ -175,22 +192,6 @@ I like to build websites, learn new things, and constantly improve my skills.
         }, 300);
       });
     });
-    
-    // Tech Stack Expansion
-    
-    const seeMoreBtn = document.getElementById('tech-see-more-btn');
-    const techGrid = document.getElementById('tech-grid');
-    
-    seeMoreBtn.addEventListener('click', () => {
-      techGrid.classList.toggle('expanded');
-      
-      if (techGrid.classList.contains('expanded')) {
-        seeMoreBtn.innerHTML = 'Show Less &uarr;'; 
-        
-      } else {
-        seeMoreBtn.innerHTML = 'See More &darr;';
-        }
-      });
   </script>
 </body>
 </html>

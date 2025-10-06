@@ -9,6 +9,7 @@
   --text-secondary: #a0a0a0;
   --border-radius: 8px;
   --transition-speed: 0.3s ease;
+  --scroll-speed: 15s;
 }
 
 * {
@@ -150,19 +151,29 @@ h2 {
 #technologies {
   padding-top: 2rem;
   padding-bottom: 2rem;
+  margin: 20px 0;
 }
 
-#tech-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 1rem;
-  overflow: hidden;
-  max-height: 220px; 
-  transition: max-height 0.7s ease-in-out;
+#tech-carousel-container {
+  overflow: hidden; 
+  width: 100%;
 }
 
-#tech-grid.expanded {
-  max-height: 1000px; 
+#carousel-inner {
+  display: flex; 
+  width: fit-content;
+  animation: scroll-left var(--scroll-speed) linear infinite;
+}
+
+#tech-grid, 
+#tech-grid-duplicate {
+  display: flex; 
+  flex-wrap: nowrap; 
+  flex-shrink: 0; 
+  width: auto; 
+  max-height: none; 
+  overflow: visible;
+  transition: none;
 }
 
 .tech-item {
@@ -176,6 +187,9 @@ h2 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-width: 120px; 
+  flex-shrink: 0;
+  margin-right: 1.5rem;
 }
 
 .tech-item:hover {
@@ -196,25 +210,17 @@ h2 {
   color: var(--text-color);
 }
 
-#tech-see-more-container {
-  text-align: center;
-  margin-top: 1.5rem;
+#tech-carousel-container:hover #carousel-inner {
+  animation-play-state: paused;
 }
-
-#tech-see-more-btn {
-  background: var(--secondary-color);
-  color: var(--text-color);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--transition-speed);
-}
-
-#tech-see-more-btn:hover {
-  background: var(--accent-color);
-  color: #fff;
+        
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 #contact {
@@ -319,13 +325,6 @@ footer {
   #project-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
-  }
-}
-
-@media (min-width: 600px) {
-  #tech-grid {
-    grid-template-columns: repeat(6, 1fr); 
-    max-height: 110px;
   }
 }
 
