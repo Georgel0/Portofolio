@@ -16,10 +16,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 *:focus { 
-  outline: 2px solid var(--accent-color); 
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
   border-radius: var(--border-radius);
 }
@@ -28,7 +29,7 @@ body {
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   line-height: 1.6;
-  background-color: black; 
+  background-color: var(--bg-color); 
 }
 
 header, main, footer {
@@ -69,6 +70,26 @@ h2 {
   margin-bottom: 1.5rem;
   border-bottom: 2px solid var(--secondary-color);
   padding-bottom: 0.5rem;
+}
+
+.curiculum-container {
+  margin: 10px;
+  margin-right: auto;
+  display: inline-block;
+}
+
+.curiculum-item {
+  padding: 15px;
+  background: var(--primary-color);
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.curiculum-item:hover {
+  transform: translateY(-3px);
+  background: var(--secondary-color);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 #project-filters {
@@ -149,8 +170,8 @@ h2 {
 }
 
 #technologies {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   margin: 20px 0;
 }
 
