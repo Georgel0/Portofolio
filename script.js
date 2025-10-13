@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('loading');
   }, 100);
   
+  // Project Filter 
+  
   const filterButtons = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.project-card');
   
@@ -30,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
+  // Reach Out Button Animation
+  
   const reachOutBtn = document.getElementById('reach-out-btn');
   const contactFormContainer = document.getElementById('contact-form-container');
   
@@ -48,3 +52,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300);
   });
 });
+
+// Dark Mode Toggle 
+
+const toggleButton = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const body = document.body;
+
+function setTheme (theme) {
+  if (theme === 'dark') {
+    body.classList.add('dark-mode');
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.remove('dark-mode');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+toggleButton.addEventListener('click', () => {
+  const isDarkMode = body.classList.contains('dark-mode');
+  themeIcon.classList.add('rotated');
+  
+  setTimeout(() => {
+    setTheme(isDarkMode ? 'light' : 'dark');
+    
+    themeIcon.classList.remove('rotated');
+  }, 500);
+});
+
+window.onload = () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    setTheme(savedTheme);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    setTheme('dark');
+  } else {
+    setTheme('light');
+  }
+};
