@@ -12,6 +12,15 @@
   --scroll-speed: 15s;
 }
 
+.dark-mode {
+  --bg-color: #ffffff;
+  --primary-color: #f0f0f0;
+  --secondary-color: #e0e0e0;
+  --accent-color: #007acc;
+  --text-color: #333333;
+  --text-secondary: #666666;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -54,6 +63,12 @@ header {
   padding-bottom: 2rem;
 }
 
+header > #theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 header h1 {
   font-size: 2.5rem;
   color: #fff;
@@ -64,12 +79,34 @@ header p {
   color: var(--text-secondary);
 }
 
+#theme-toggle {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+        }
+
+#theme-icon {
+  display: inline-block;
+  transition: transform 0.5s ease-in-out; }
+
+.rotated {
+  transform: rotate(180deg);
+        }
+
 h2 {
   font-size: 2rem;
   color: var(--accent-color);
   margin-bottom: 1.5rem;
   border-bottom: 2px solid var(--secondary-color);
   padding-bottom: 0.5rem;
+}
+
+a {
+  text-decoration: none; color: var(--accent-color);
 }
 
 .curiculum-container {
