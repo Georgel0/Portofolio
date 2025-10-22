@@ -112,7 +112,8 @@ a {
 .curiculum-container {
   margin: 10px;
   margin-right: auto;
-  display: inline-block;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .curiculum-item {
