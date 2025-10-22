@@ -375,20 +375,20 @@ footer {
   color: var(--accent-color);
 }
 
-@media (min-width: 1600px) {
+@media screen and (min-width: 1600px) {
   header, main, footer {
     max-width: 1400px;
   }
 }
 
-@media (min-width: 1200px) {
+@media screen and (min-width: 1200px) {
   #project-grid {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
   }
 }
 
-@media (max-width: 500px) {
+@media screen and (max-width: 500px) {
   .project-columns {
     grid-template-columns: 1fr;
     gap: 0.5rem;
@@ -400,5 +400,10 @@ footer {
 
   header, main, footer {
     padding: 1.5rem 1rem;
+  }
+  
+  .curiculum-container {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
