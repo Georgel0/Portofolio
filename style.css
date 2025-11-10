@@ -34,7 +34,7 @@
   border-radius: var(--border-radius);
 }
 
-body {
+html {
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   line-height: 1.6;
@@ -81,6 +81,13 @@ header p {
 
 summary {
   color: var(--accent-color);
+  /* NEW: Allow summary to take up full width for better click target */
+  display: block; 
+  cursor: pointer;
+}
+/* NEW: Better visual for summary hover */
+summary:hover {
+  text-decoration: underline;
 }
 
 #theme-toggle {
@@ -91,15 +98,16 @@ summary {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.5s ease;
-        }
+}
 
 #theme-icon {
   display: inline-block;
-  transition: transform 0.5s ease-in-out; }
+  transition: transform 0.5s ease-in-out; 
+}
 
 .rotated {
   transform: rotate(180deg);
-        }
+}
 
 h2 {
   font-size: 2rem;
@@ -162,6 +170,8 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   display: grid;
   gap: 1.5rem;
+  /* NEW: Align items to stretch vertically in the grid row */
+  align-items: stretch; 
 }
 
 .project-card {
@@ -170,11 +180,13 @@ a {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-  display: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Important for Flexbox to work correctly within grid */
 }
 
 .project-card.show {
-  display: block; 
+  display: flex; /* Changed from block to flex for consistency */
 }
 
 .project-card:hover {
@@ -191,6 +203,11 @@ a {
 
 .project-card .project-info {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  /* NEW: Ensure this container has space to grow */
+  justify-content: space-between; 
 }
 
 .project-card p {
@@ -199,12 +216,16 @@ a {
 }
 
 .project-card .project-link, .course-link {
-  display: flex;
-  align-content: left;
+  display: flex; 
+  align-items: center; 
   margin-top: 0.25rem;
   color: var(--accent-color);
   text-decoration: none;
   font-weight: 600;
+}
+
+.project-info > a.project-link { 
+  margin-top: auto;
 }
 
 .project-columns {
