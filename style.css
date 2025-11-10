@@ -79,6 +79,10 @@ header p {
   color: var(--text-secondary);
 }
 
+summary {
+  color: var(--accent-color);
+}
+
 #theme-toggle {
   background-color: var(--accent-color);
   color: var(--bg-color);
@@ -106,7 +110,9 @@ h2 {
 }
 
 a {
-  text-decoration: none; color: var(--accent-color);
+  text-decoration: none; 
+  color: var(--accent-color);
+  font-weight: 600;
 }
 
 .curiculum-container {
@@ -204,7 +210,7 @@ a {
 .project-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: start;
+  margin: 5px;
 }
 
 #technologies {
