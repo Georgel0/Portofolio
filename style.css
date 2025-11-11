@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 :root {
-  --bg-color: #0d0d0d;
+  --bg-color: transparent; 
   --primary-color: #1a1a1a;
   --secondary-color: #262626;
   --accent-color: #00aaff;
-  --text-color: #e0e0e0;
+  --text-color: #e0e0e0; 
   --text-secondary: #a0a0a0;
   --border-radius: 8px;
   --transition-speed: 0.3s ease;
@@ -13,12 +13,20 @@
 }
 
 .dark-mode {
-  --bg-color: #ffffff;
-  --primary-color: #f0f0f0;
+  --bg-color: transparent; 
+  --primary-color: #F0F0F0;
   --secondary-color: #e0e0e0;
   --accent-color: #007acc;
-  --text-color: #333333;
-  --text-secondary: #666666;
+  --text-color: black; 
+  --text-secondary: #444444;
+}
+
+body {
+  background-color: #000; 
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden; 
 }
 
 * {
@@ -34,13 +42,6 @@
   border-radius: var(--border-radius);
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  color: var(--text-color);
-  line-height: 1.6;
-  background-color: var(--bg-color); 
-}
-
 header, main, footer {
   max-width: 1200px;
   margin: 0 auto;
@@ -48,6 +49,8 @@ header, main, footer {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  position: relative; 
+  z-index: 1; 
 }
 
 body:not(.loading) header, 
@@ -67,6 +70,7 @@ header > #theme-toggle {
   position: absolute;
   top: 20px;
   right: 20px;
+  z-index: 10; 
 }
 
 header h1 {
@@ -100,10 +104,43 @@ a {
   font-weight: 600;
 }
 
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -3; 
+}
+
+.video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  visibility: hidden; 
+  transition: opacity 0.6s ease-in-out;
+}
+
+.video-bg.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-bg#video-dark.active {
+    opacity: 0.2;
+}
+
+.video-bg#video-light.active {
+    opacity: 1; 
+}
 
 #theme-toggle {
   background-color: var(--accent-color);
-  color: var(--bg-color);
+  color: var(--text-color); 
   border: none;
   padding: 8px;
   border-radius: 5px;
@@ -181,8 +218,8 @@ a {
   height: 100%;
 }
 
-.project-card.show {
-  display: flex;
+.project-card:not(.show) {
+  display: none;
 }
 
 .project-card:hover {
@@ -195,6 +232,10 @@ a {
   height: 200px;
   object-fit: cover;
   background: white;
+}
+
+.project-card .project-info details {
+  margin-top: auto;
 }
 
 .project-card .project-info {
@@ -221,7 +262,6 @@ a {
 
 .project-info > a.project-link { 
   margin-top: auto;
-  padding-top: 1rem; 
 }
 
 .project-columns {
