@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Crypto Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+    'background-dark': '#12121e', /* Changed from 'background-color' for consistency */
+    'card-dark': '#1a1a2e',
+    'control-dark': '#2c2c47',
+    'primary-green': '#4CAF50',
+    'accent-green': '#00ff84',
+    'price-up': '#00ff84',
+    'price-down': '#ff5757',
+    'border-dark': '#333',
+                    },
+                    boxShadow: {
+    'header': '0 6px 12px rgba(0, 0, 0, 0.4)',
+    'global': '0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(76, 175, 80, 0.1)',
+    'table': '0 0 20px rgba(0, 0, 0, 0.5)',
+                    },
+                    keyframes: {
+    'flash-green': {
+    '0%': { backgroundColor: '#00ff8440' }, '100%': { backgroundColor: 'transparent' },
+                        },
+    'flash-red': { '0%': { backgroundColor: '#ff575740' },
+    '100%': { backgroundColor: 'transparent' },},
+                    },
+                    animation: {
+    'flash-green': 'flash-green 1s ease-out',
+    'flash-red': 'flash-red 1s ease-out',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .flash-green { animation: flash-green 1s ease-out; }
+        .flash-red { animation: flash-red 1s ease-out; }
+        
+        /* --- Styles to Restore Original Table Appearance --- */
+        .crypto-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a2e; /* card-dark */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Important for rounding corners */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* table shadow */
+        }
+        
+        .crypto-table th {
+            padding: 16px; /* p-4 equivalent */
+            background-color: #2c2c47; /* control-dark */
+            color: #4CAF50; /* primary-green */
+            text-align: right;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.875rem; /* text-sm */
+        }
+        
+        /* Overriding th alignment for Rank and Coin */
+        .crypto-table th:nth-child(1), .crypto-table th:nth-child(2) {
+            text-align: left;
+        }
+
+        .crypto-table td {
+            padding: 16px; /* p-4 equivalent */
+            border-bottom: 1px solid #333; /* border-dark */
+            text-align: right; /* Default for price/volume/change columns */
+        }
+        
+        /* Remove border from the last row */
+        .crypto-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .crypto-table tbody tr:hover {
+            background-color: rgba(44, 44, 71, 0.3); /* Custom hover color */
+        }
+
+        /* Specific styles for the Coin column */
+        .crypto-table td:nth-child(2) {
+            text-align: left;
+        }
+
+        .coin-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: normal;
+        }
+        
+        .coin-logo {
+            width: 24px; /* Fix logo size */
+            height: 24px;
+        }
+        
+        .price-up { color: #00ff84; } 
+        .price-down { color: #ff5757; }
+        /* --- End of Restored Table Styles --- */
+        
+        /* Column Widths (as before) */
+        .crypto-table th:nth-child(1), .crypto-table td:nth-child(1) { text-align: center; width: 5%; }
+        .crypto-table th:nth-child(2), .crypto-table td:nth-child(2) { text-align: left; width: 18%; }
+        .crypto-table th:nth-child(7), .crypto-table td:nth-child(7) { width: 10%; }
+
+        /* Responsive hiding (as before) */
+        @media (max-width: 1024px) {
+            .crypto-table th:nth-child(4), .crypto-table td:nth-child(4) { display: none; }
+        }
+        @media (max-width: 768px) {
+            .crypto-table th:nth-child(6), .crypto-table td:nth-child(6) { display: none; }
+        }
+        @media (max-width: 500px) {
+            .crypto-table th:nth-child(7), .crypto-table td:nth-child(7) { display: none; }
+        }
+
+        .active-filter {
+            background-color: #4CAF50 !important;
+            color: #1a1a2e !important;
+            border: 2px solid #00ff84 !important;
+        }
+
+        .sparkline-chart {
+          height: 30px;
+          width: 100%;
+        }
+        .sparkline-chart svg {
+          width: 100%;
+          height: 100%;
+        }
+        
+        /* Style for loading/error messages inside the container */
+        #crypto-container p {
+            padding: 16px;
+            color: #ccc;
+        }
+        .error-message {
+            color: #ff5757;
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-background-dark text-gray-100 m-0 p-0">
+    <header class="text-center pt-8 pb-5 bg-card-dark shadow-header border-b-2 border-primary-green">
+        <h1 class="m-0 mb-1 text-4xl font-extrabold text-primary-green tracking-wider" style="text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);">Cryptocurrency Live Price Tracker 🪙</h1>
+        <p class="text-sm text-gray-400 m-0">Top 25 coins by market capitalization. Data updates automatically every 60s.</p>
+    </header>
+    
+    <section id="global-stats" class="w-11/12 max-w-7xl mx-auto my-8 flex justify-around gap-4 p-5 bg-card-dark rounded-xl shadow-global border border-border-dark flex-wrap">
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto border-r border-border-dark last:border-r-0 odd:md:border-r even:md:border-r-0 even:lg:border-r">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">Total Market Cap:</h3>
+            <p id="total-market-cap" class="text-3xl font-bold text-gray-100">Loading...</p>
+        </div>
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto border-r border-border-dark last:border-r-0 odd:md:border-r even:md:border-r-0 even:lg:border-r">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">BTC Dominance:</h3>
+            <p id="btc-dominance" class="text-3xl font-bold text-gray-100">Loading...</p>
+        </div>
+        <div class="stat-card text-center p-1 px-2 flex-1 md:basis-1/3 lg:basis-auto last:border-r-0">
+            <h3 class="m-0 mb-1 text-xl text-primary-green uppercase tracking-wide">24h Total Volume:</h3>
+            <p id="total-volume" class="text-3xl font-bold text-gray-100">Loading...</p>
+        </div>
+    </section>
+    
+    <section id="controls" class="w-11/12 max-w-7xl mx-auto my-3 p-4 bg-card-dark rounded-lg flex flex-wrap gap-4 items-center shadow-md sm:flex-col sm:items-stretch md:flex-row">
+        <input type="text" id="search-input" placeholder="Search by coin name or symbol..."
+            class="p-2 border border-primary-green rounded-md bg-[#1a1a1e] text-gray-100 flex-grow max-w-xs md:max-w-none md:w-auto focus:ring-2 focus:ring-primary-green focus:outline-none">
+        
+        <div id="filter-buttons" class="flex gap-2 flex-wrap justify-between sm:w-full">
+            <button id="show-all-btn" data-filter="all" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] active-filter flex-grow">Show All</button>
+            <button data-filter="high_cap" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] flex-grow">High Cap ($1B+)</button>
+            <button data-filter="low_price" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer whitespace-nowrap transition duration-200 hover:bg-[#3f3f61] flex-grow">Low Price (< $1)</button>
+        </div>
+        
+        <div id="sort-controls" class="flex gap-4 items-center flex-wrap sm:w-full justify-between">
+            <label for="currency-select" class="text-gray-100">Currency:</label>
+            <select id="currency-select" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer">
+                <option value="usd">USD</option> 
+                <option value="eur">EUR</option>
+                <option value="gbp">GBP</option>
+            </select>
+            
+            <label for="sort-select" class="text-gray-100">Sort By:</label>
+            <select id="sort-select" class="p-2 px-4 rounded-md border-0 bg-control-dark text-gray-100 cursor-pointer">
+                <option value="market_cap_rank_asc">Rank (Popularity)</option>
+                <option value="current_price_desc">Price (High to Low)</option>
+                <option value="market_cap_desc">Market Cap (High to Low)</option>
+                <option value="total_volume_desc">24h Volume (High to Low)</option>
+                <option value="price_change_percentage_7d_in_currency_desc">7d Change (High to Low)</option>
+            </select>
+        </div>
+    </section>
+    
+    <main class="w-11/12 max-w-7xl mx-auto my-5">
+        <div id="crypto-container">
+            <p id="loading-message">Loading top 25 cryptocurrency data...</p>
+        </div>
+    </main>
+    
+    <footer class="text-center p-3 text-gray-500 text-sm mt-5">
+        <p>Data powered by CoinGecko API</p>
+        <p id="last-updated"></p>
+    </footer>
+       <script>
+        const CONFIG = {
+            BASE_URL: 'https://api.coingecko.com/api/v3/',
+            COINS_MARKETS_ENDPOINT: 'coins/markets',
+            GLOBAL_ENDPOINT: 'global',
+            REFRESH_RATE: 60000, 
+            CACHE_KEY: 'cryptoTrackerData',
+            API_PARAMS: `order=market_cap_desc&per_page=25&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
+        };
+
+        const DOM = {
+            container: document.getElementById('crypto-container'),
+            lastUpdated: document.getElementById('last-updated'),
+            searchInput: document.getElementById('search-input'),
+            sortSelect: document.getElementById('sort-select'),
+            currencySelect: document.getElementById('currency-select'),
+            filterButtons: document.querySelectorAll('#filter-buttons button'),
+            globalStats: {
+                marketCap: document.getElementById('total-market-cap'),
+                btcDominance: document.getElementById('btc-dominance'),
+                totalVolume: document.getElementById('total-volume')
+            }
+        };
+
+        let state = {
+            cryptoData: [],         
+            currentFilter: 'all',   
+            currentCurrency: DOM.currencySelect.value, 
+            oldPrices: {}           
+        };
+
+        function formatCurrency(number, currency = state.currentCurrency) {
+            if (number === null || isNaN(number)) return ` -`;
+            
+            if (number >= 1e6 && currency === 'usd') { 
+                const magnitude = Math.floor(Math.log10(number) / 3);
+                const suffix = ['', 'K', 'M', 'B', 'T'][magnitude];
+                const abbreviated = (number / Math.pow(1000, magnitude)).toFixed(2);
+                
+                const symbol = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(0).charAt(0);
+                return `${symbol} ${abbreviated}${suffix}`;
+            }
+
+            return number.toLocaleString('en-US', {
+                style: 'currency',
+                currency: currency.toUpperCase(),
+                minimumFractionDigits: 2,
+                maximumFractionDigits: number < 1 ? 6 : 2
+            });
+        }
+
+        function formatPercentage(number) {
+            if (number === null || isNaN(number)) return '-';
+            const sign = number >= 0 ? '+' : '';
+            const className = number >= 0 ? 'price-up' : 'price-down';
+            return `<span class="${className}">${sign}${number.toFixed(2)}%</span>`;
+        }
+
+        function createSparkline(prices) {
+            if (!prices || prices.length < 2) return '';
+
+            const width = 100;
+            const height = 30;
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const range = maxPrice - minPrice;
+            const points = prices.length;
+            
+            const startPrice = prices[0];
+            const endPrice = prices[prices.length - 1];
+            const color = endPrice >= startPrice ? '#00ff84' : '#ff5757';
+
+            const pointsArray = prices.map((price, index) => {
+                const x = (index / (points - 1)) * width;
+                let y = range === 0 ? height / 2 : height - ((price - minPrice) / range) * height;
+
+                return `${x},${y}`;
+            }).join(' ');
+
+            return `
+                <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" class="sparkline-chart">
+                    <polyline fill="none" stroke="${color}" stroke-width="1.5" points="${pointsArray}" />
+                </svg>
+            `;
+        }
+
+        function getFilteredAndSortedData() {
+            let data = [...state.cryptoData];
+            
+            const MARKET_CAP_THRESHOLD = 1000000000;
+            const PRICE_THRESHOLD = 1;
+
+            switch (state.currentFilter) {
+                case 'high_cap':
+                    data = data.filter(coin => coin.market_cap >= MARKET_CAP_THRESHOLD);
+                    break;
+                case 'low_price':
+                    data = data.filter(coin => coin.current_price < PRICE_THRESHOLD);
+                    break;
+            }
+
+            const searchTerm = DOM.searchInput.value.toLowerCase().trim();
+            if (searchTerm) {
+                data = data.filter(coin => 
+                    coin.name.toLowerCase().includes(searchTerm) || 
+                    coin.symbol.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            const sortValue = DOM.sortSelect.value;
+            const [key, order] = sortValue.split('_');
+
+            data.sort((a, b) => {
+                let valA = a[key];
+                let valB = b[key];
+
+                if (typeof valA === 'string') {
+                    return order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                
+                const numA = valA ?? (order === 'asc' ? Infinity : -Infinity);
+                const numB = valB ?? (order === 'asc' ? Infinity : -Infinity);
+                
+                return order === 'asc' ? numA - numB : numB - numA;
+            });
+
+            return data;
+        }
+
+        function renderCryptoTable() {
+            const processedData = getFilteredAndSortedData();
+
+            if (!processedData || processedData.length === 0) {
+                DOM.container.innerHTML = '<p class="error-message">No results found matching your criteria.</p>';
+                return;
+            }
+
+            const rows = processedData.map(coin => {
+                const priceId = `price-${coin.id}`;
+                const oldPrice = state.oldPrices[coin.id] || coin.current_price;
+                const newPrice = coin.current_price;
+                let flashClass = '';
+
+                if (newPrice > oldPrice) {
+                    flashClass = 'flash-green';
+                } else if (newPrice < oldPrice) {
+                    flashClass = 'flash-red';
+                }
+
+                state.oldPrices[coin.id] = newPrice;
+
+                return `
+                    <tr>
+                        <td>${coin.market_cap_rank || '-'}</td>
+                        <td>
+                            <div class="coin-name">
+                                <img src="${coin.image}" alt="${coin.name} logo" class="coin-logo">
+                                <strong>${coin.name}</strong> (${coin.symbol.toUpperCase()})
+                            </div>
+                        </td>
+                        <td id="${priceId}" class="${flashClass}">
+                            ${formatCurrency(coin.current_price)}
+                        </td>
+                        <td>${formatPercentage(coin.price_change_percentage_1h_in_currency)}</td>
+                        <td>${formatPercentage(coin.price_change_percentage_24h_in_currency)}</td>
+                        <td>${formatPercentage(coin.price_change_percentage_7d_in_currency)}</td>
+                        <td>${createSparkline(coin.sparkline_in_7d.price)}</td>
+                        <td>${formatCurrency(coin.market_cap)}</td>
+                        <td>${formatCurrency(coin.total_volume)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const tableHTML = `
+                <table class="crypto-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Coin</th>
+                            <th>Price</th>
+                            <th>1h Change</th>
+                            <th>24h Change</th>
+                            <th>7d Change</th>
+                            <th>7d Trend</th>
+                            <th>Market Cap</th>
+                            <th>24h Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+
+            DOM.container.innerHTML = tableHTML;
+            
+            processedData.forEach(coin => {
+                const priceCell = document.getElementById(`price-${coin.id}`);
+                if (priceCell) {
+                    setTimeout(() => priceCell.classList.remove('flash-green', 'flash-red'), 1000);
+                }
+            });
+        }
+
+        async function updateGlobalStats() {
+            try {
+                const response = await fetch(CONFIG.BASE_URL + CONFIG.GLOBAL_ENDPOINT);
+                if (!response.ok) throw new Error(`Global API error! status: ${response.status}`);
+                
+                const globalData = await response.json();
+                const marketData = globalData.data;
+                
+                const totalMarketCap = marketData.total_market_cap[state.currentCurrency] || marketData.total_market_cap.usd;
+                const totalVolume = marketData.total_volume[state.currentCurrency] || marketData.total_volume.usd;
+
+                DOM.globalStats.marketCap.textContent = formatCurrency(totalMarketCap, 'usd'); 
+                DOM.globalStats.btcDominance.textContent = `${marketData.market_cap_percentage.btc.toFixed(2)}%`;
+                DOM.globalStats.totalVolume.textContent = formatCurrency(totalVolume, 'usd');
+            } catch (error) {
+                console.error("Error fetching global stats:", error);
+                DOM.globalStats.marketCap.textContent = 'N/A';
+                DOM.globalStats.btcDominance.textContent = 'N/A';
+                DOM.globalStats.totalVolume.textContent = 'N/A';
+            }
+        }
+
+        function loadFromCache() {
+            const cached = localStorage.getItem(CONFIG.CACHE_KEY);
+            if (cached) {
+                const cacheData = JSON.parse(cached);
+                const cacheAge = Date.now() - cacheData.timestamp;
+
+                if (cacheAge < 300000) { 
+                    state.cryptoData = cacheData.data;
+                    renderCryptoTable();
+                    DOM.lastUpdated.textContent = `Last updated: (Cached) ${new Date(cacheData.timestamp).toLocaleTimeString()}`;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        async function fetchCryptoData() {
+            DOM.container.innerHTML = '<p id="loading-message">Fetching the latest prices...</p>';
+            DOM.lastUpdated.textContent = 'Last updated: Fetching...';
+            
+            if (!loadFromCache()) {
+                console.log("No valid cache found. Fetching live data...");
+            }
+
+            const marketURL = `${CONFIG.BASE_URL}${CONFIG.COINS_MARKETS_ENDPOINT}?vs_currency=${state.currentCurrency}&${CONFIG.API_PARAMS}`;
+
+            try {
+                const response = await fetch(marketURL);
+                
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        throw new Error("API Rate Limit Exceeded. Please wait 60 seconds before refreshing.");
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const freshData = await response.json(); 
+                state.cryptoData = freshData;
+                
+                const cacheData = { data: freshData, timestamp: Date.now() };
+                localStorage.setItem(CONFIG.CACHE_KEY, JSON.stringify(cacheData));
+                
+                renderCryptoTable();
+                updateGlobalStats(); 
+                
+                const now = new Date();
+                DOM.lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
+
+            } catch (error) {
+                console.error("Error fetching crypto prices:", error);
+                
+                if (state.cryptoData.length === 0) {
+                    DOM.container.innerHTML = `<p class="error-message">Failed to load data. ${error.message}. Please try again later.</p>`;
+                    DOM.lastUpdated.textContent = 'Last updated: Failed.';
+                }
+            }
+        }
+
+        function handleFilterClick(event) {
+            const button = event.target.closest('button');
+            if (!button) return;
+
+            state.currentFilter = button.dataset.filter || 'all'; 
+            
+            DOM.filterButtons.forEach(btn => btn.classList.remove('active-filter'));
+            button.classList.add('active-filter');
+
+            renderCryptoTable();
+        }
+
+        function handleCurrencyChange() {
+            state.currentCurrency = DOM.currencySelect.value;
+            fetchCryptoData();
+        }
+
+        function init() {
+            DOM.searchInput.addEventListener('input', renderCryptoTable);
+            DOM.sortSelect.addEventListener('change', renderCryptoTable);
+            DOM.currencySelect.addEventListener('change', handleCurrencyChange);
+            DOM.filterButtons.forEach(button => {
+                button.addEventListener('click', handleFilterClick);
+            });
+            fetchCryptoData();
+            setInterval(fetchCryptoData, CONFIG.REFRESH_RATE);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
