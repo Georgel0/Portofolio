@@ -81,13 +81,9 @@ header p {
 
 summary {
   color: var(--accent-color);
-  /* NEW: Allow summary to take up full width for better click target */
   display: block; 
   cursor: pointer;
-}
-/* NEW: Better visual for summary hover */
-summary:hover {
-  text-decoration: underline;
+  font-weight: 600;
 }
 
 #theme-toggle {
@@ -170,7 +166,6 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   display: grid;
   gap: 1.5rem;
-  /* NEW: Align items to stretch vertically in the grid row */
   align-items: stretch; 
 }
 
@@ -182,11 +177,11 @@ a {
   transition: transform var(--transition-speed), box-shadow var(--transition-speed);
   display: flex;
   flex-direction: column;
-  height: 100%; /* Important for Flexbox to work correctly within grid */
+  height: 100%;
 }
 
 .project-card.show {
-  display: flex; /* Changed from block to flex for consistency */
+  display: flex;
 }
 
 .project-card:hover {
@@ -206,7 +201,6 @@ a {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  /* NEW: Ensure this container has space to grow */
   justify-content: space-between; 
 }
 
