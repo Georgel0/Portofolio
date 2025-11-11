@@ -51,42 +51,41 @@ document.addEventListener('DOMContentLoaded', () => {
       reachOutBtn.classList.remove('fade-out');
     }, 300);
   });
-});
-
-// Dark Mode Toggle 
-
-const toggleButton = document.getElementById('theme-toggle');
-const themeIcon = document.getElementById('theme-icon');
-const body = document.body;
-
-function setTheme (theme) {
-  if (theme === 'dark') {
-    body.classList.add('dark-mode');
-    themeIcon.classList.remove('fa-sun');
-    themeIcon.classList.add('fa-moon');
-    
-    localStorage.setItem('theme', 'dark');
-  } else {
-    body.classList.remove('dark-mode');
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    
-    localStorage.setItem('theme', 'light');
-  }
-}
-
-toggleButton.addEventListener('click', () => {
-  const isDarkMode = body.classList.contains('dark-mode');
-  themeIcon.classList.add('rotated');
   
-  setTimeout(() => {
-    setTheme(isDarkMode ? 'light' : 'dark');
+  
+  // Dark Mode Toggle 
+  
+  const toggleButton = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const body = document.body;
+  
+  function setTheme (theme) {
+    if (theme === 'dark') {
+      body.classList.add('dark-mode');
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+      
+      localStorage.setItem('theme', 'dark');
+    } else {
+      body.classList.remove('dark-mode');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      
+      localStorage.setItem('theme', 'light');
+    }
+  }
+  
+  toggleButton.addEventListener('click', () => {
+    const isDarkMode = body.classList.contains('dark-mode');
+    themeIcon.classList.add('rotated');
     
-    themeIcon.classList.remove('rotated');
-  }, 500);
-});
+    setTimeout(() => {
+      setTheme(isDarkMode ? 'light' : 'dark');
+      
+      themeIcon.classList.remove('rotated');
+    }, 500);
+  });
 
-window.onload = () => {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme) {
     setTheme(savedTheme);
@@ -95,4 +94,5 @@ window.onload = () => {
   } else {
     setTheme('light');
   }
-};
+
+});
