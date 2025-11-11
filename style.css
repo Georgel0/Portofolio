@@ -219,8 +219,7 @@ a {
   font-weight: 600;
 }
 
-.project-info > a.project-link,
-.project-info > details { 
+.project-info > a.project-link { 
   margin-top: auto;
   padding-top: 1rem; 
 }
@@ -228,7 +227,6 @@ a {
 .project-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
   margin: 5px 0; 
 }
 
