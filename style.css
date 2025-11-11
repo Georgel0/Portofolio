@@ -86,6 +86,21 @@ summary {
   font-weight: 600;
 }
 
+h2 {
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 0.5rem;
+}
+
+a {
+  text-decoration: none; 
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+
 #theme-toggle {
   background-color: var(--accent-color);
   color: var(--bg-color);
@@ -103,20 +118,6 @@ summary {
 
 .rotated {
   transform: rotate(180deg);
-}
-
-h2 {
-  font-size: 2rem;
-  color: var(--accent-color);
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--secondary-color);
-  padding-bottom: 0.5rem;
-}
-
-a {
-  text-decoration: none; 
-  color: var(--accent-color);
-  font-weight: 600;
 }
 
 .curiculum-container {
