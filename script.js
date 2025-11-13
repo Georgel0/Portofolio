@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   //Video Background Activation Function
   function activateVideo(isDarkMode) {
-    // 1. Reset Z-index and active classes for clean switch
+  
     videoDark.classList.remove('active');
     videoLight.classList.remove('active');
     videoDark.style.zIndex = '-2';
@@ -25,14 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetVideo = isDarkMode ? videoDark : videoLight;
     let otherVideo = isDarkMode ? videoLight : videoDark;
 
-    // 2. Stop the inactive video
     otherVideo.pause();
 
-    // 3. Activate the target video
     targetVideo.classList.add('active');
     targetVideo.style.zIndex = '-1';
 
-    // 4. Try to play 
     targetVideo.play().catch(e => console.debug("Play prevented:", e.message));
   }
 
