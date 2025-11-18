@@ -135,7 +135,7 @@ a {
 }
 
 .video-bg#video-light.active {
-    opacity: 1; 
+    opacity: 0.99; 
 }
 
 #theme-toggle {
@@ -170,6 +170,7 @@ a {
   border-radius: 10px;
   cursor: pointer;
   margin: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
 .curiculum-item:hover {
