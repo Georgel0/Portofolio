@@ -2,6 +2,7 @@
 
 :root {
   --bg-color: transparent; 
+  --bg-fallback: #000000;
   --primary-color: #1a1a1a;
   --secondary-color: #262626;
   --accent-color: #00aaff;
@@ -14,6 +15,7 @@
 
 .dark-mode {
   --bg-color: transparent; 
+  --bg-fallback: #FFFFFF;
   --primary-color: #F0F0F0;
   --secondary-color: #e0e0e0;
   --accent-color: #007acc;
@@ -22,7 +24,7 @@
 }
 
 body {
-  background-color: #000; 
+  background-color: var(--bg-fallback); 
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
   line-height: 1.6;
@@ -131,11 +133,11 @@ a {
 }
 
 .video-bg#video-dark.active {
-    opacity: 0.3;
+    opacity: 0.2;
 }
 
 .video-bg#video-light.active {
-    opacity: 0.99; 
+    opacity: 0.5; 
 }
 
 #theme-toggle {
