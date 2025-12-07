@@ -379,13 +379,13 @@
     
     // LIGHT THEME settings
     root.style.setProperty('--brand-lightness', 0.4);
-    root.style.setProperty('--brand-chroma', 0.10);  
+    root.style.setProperty('--brand-chroma', 0);  
   } else {
     document.body.classList.remove('is-light');
     
     // DARK THEME settings
-    root.style.setProperty('--brand-lightness', 0.8); 
-    root.style.setProperty('--brand-chroma', 0.25); 
+    root.style.setProperty('--brand-lightness', 0.7); 
+    root.style.setProperty('--brand-chroma', 0.01); 
   }
   localStorage.setItem('themeColor', hex);
 }
