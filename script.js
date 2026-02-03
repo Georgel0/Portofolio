@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   //Video Background Activation Function
   function activateVideo(isDarkMode) {
-  
     videoDark.classList.remove('active');
     videoLight.classList.remove('active');
     videoDark.style.zIndex = '-2';
