@@ -3,8 +3,8 @@
 :root {
   --bg-color: transparent; 
   --bg-fallback: #000000;
-  --primary-color: #1a1a1a;
-  --secondary-color: #262626;
+  --primary-color: black;
+  --secondary-color: black;
   --accent-color: #00aaff;
   --text-color: #e0e0e0; 
   --text-secondary: #a0a0a0;
