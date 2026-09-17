@@ -447,6 +447,32 @@ footer {
   color: var(--accent-color);
 }
 
+#github-contributions {
+  margin: 20px 0;
+}
+
+.contribution-container {
+  background: var(--primary-color);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background var(--transition-speed);
+}
+
+.contribution-container img {
+  max-width: 100%;
+  min-width: 700px;
+  pointer-events: none;
+}
+
+.dark-mode .contribution-container img {
+  opacity: 0.9;
+}
+
 @media screen and (min-width: 1600px) {
   header, main, footer {
     max-width: 1400px;
