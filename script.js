@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   videoDark.load();
   videoLight.load();
   
-  //Video Background Activation Function
   function activateVideo(isDarkMode) {
     videoDark.classList.remove('active');
     videoLight.classList.remove('active');
@@ -32,8 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     targetVideo.play().catch(e => console.debug("Play prevented:", e.message));
   }
 
-  //Combined Theme Switching Function
-  function setTheme (theme) {
+  function setTheme(theme) {
     const isDarkMode = (theme === 'dark');
     
     if (!isDarkMode) { 
@@ -52,13 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('theme', 'dark');
     }
     
-    // Switch the video background (true = dark video, false = light video)
     activateVideo(isDarkMode);
   }
   
   function filterProjects(filter) {
     projectCards.forEach(card => {
-
       const hasAnimationClass = card.classList.contains('animate-on-scroll'); 
       
       if (filter === 'all' || card.getAttribute('data-category') === filter || (filter === 'design' && card.getAttribute('data-category') === 'design')) {
@@ -77,11 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  //Initialization on Load
   setTimeout(() => {
     document.body.classList.remove('loading');
     
-    // Manually trigger animation 
     const initialElements = document.querySelectorAll('.animate-on-scroll');
     initialElements.forEach(element => {
         const rect = element.getBoundingClientRect();
@@ -103,9 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTheme('dark'); 
   }
 
-  //Event Listeners
-  
-  // Theme Toggle Click
   toggleButton.addEventListener('click', () => {
     const isCurrentlyLight = body.classList.contains('dark-mode'); 
     themeIcon.classList.add('rotated');
@@ -116,13 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500); 
   });
   
-  // Autoplay handler
   document.body.addEventListener('click', () => {
     videoDark.play().catch(() => {});
     videoLight.play().catch(() => {});
   }, { once: true });
 
-  //Project Filter Logic
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
       filterButtons.forEach(btn => {
@@ -139,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  //Reach Out Button Animation
   const reachOutBtn = document.getElementById('reach-out-btn');
   const contactFormContainer = document.getElementById('contact-form-container');
   
@@ -154,4 +142,43 @@ document.addEventListener('DOMContentLoaded', () => {
       reachOutBtn.classList.remove('fade-out');
     }, 300); 
   });
+
+  async function loadGitHubContributions() {
+    const grid = document.getElementById('github-calendar-grid');
+    const tooltip = document.getElementById('contrib-tooltip');
+    if (!grid) return;
+
+    try {
+      const response = await fetch('https://github-contributions-api.jogruber.de/v4/Georgel0');
+      const data = await response.json();
+      
+      if (!data.contributions) return;
+
+      grid.innerHTML = '';
+      data.contributions.forEach(day => {
+        const cell = document.createElement('div');
+        cell.className = 'contrib-day';
+        cell.setAttribute('data-level', day.level);
+        
+        cell.addEventListener('mouseenter', () => {
+          tooltip.textContent = `${day.count} contributions on ${day.date}`;
+          tooltip.style.display = 'block';
+          const rect = cell.getBoundingClientRect();
+          const wrapperRect = grid.parentElement.getBoundingClientRect();
+          tooltip.style.left = `${rect.left - wrapperRect.left}px`;
+          tooltip.style.top = `${rect.top - wrapperRect.top - 32}px`;
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        grid.appendChild(cell);
+      });
+    } catch (err) {
+      grid.innerHTML = '<p style="font-size: 0.9rem; color: var(--text-secondary);">Unable to load contribution data.</p>';
+    }
+  }
+
+  loadGitHubContributions();
 });
